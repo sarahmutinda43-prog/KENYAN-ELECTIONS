@@ -2,6 +2,12 @@
 
 This project is configured for a production-ready Cloudflare deployment with a static frontend and backend APIs backed by Cloudflare Pages Functions and D1.
 
+## County governor sample results
+
+Open [`county-results.html`](./county-results.html) for the all-47-county summary and expandable candidate tables.
+
+**Important:** Those figures and candidate names are fictional demonstration data, not official results, a prediction, or an IEBC publication. Kenya’s 2027 election has not taken place. Do not present or redistribute the sample figures as real election results.
+
 ## Local development
 
 ```bash
