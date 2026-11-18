@@ -1,0 +1,11 @@
+.assetsignore
+.git/
+.wrangler/
+node_modules/
+README.md
+package.json
+package-lock.json
+schema.sql
+wrangler.toml
+worker.js
+functions/

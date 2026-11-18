@@ -2,13 +2,16 @@
   "name": "kenyanelections",
   "private": true,
   "version": "1.0.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
-    "dev": "npx wrangler pages dev .",
-    "deploy": "npx wrangler pages deploy . --project-name kenyanelections",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
     "db:create": "npx wrangler d1 create kenya-elections-db",
-    "db:migrate": "npx wrangler d1 execute kenya-elections-db --file=./schema.sql"
+    "db:migrate": "npx wrangler d1 execute kenya-elections-db --remote --file=./schema.sql"
   },
   "devDependencies": {
-    "wrangler": "^3.100.0"
+    "wrangler": "^4.164.0"
   }
 }

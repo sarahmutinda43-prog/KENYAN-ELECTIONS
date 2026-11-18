@@ -1,33 +1,49 @@
 # Kenya Elections Demo
 
-This project is configured for a production-ready Cloudflare deployment with a static frontend and backend APIs backed by Cloudflare Pages Functions and D1.
+This project is configured for Cloudflare Workers with static asset hosting and API routes. D1 is optional; without a configured D1 binding, the prototype uses demo fallbacks and does not persist API submissions across Worker instances.
 
-## County governor sample results
+## Fictional county results demo
 
-Open [`county-results.html`](./county-results.html) for the all-47-county summary and expandable candidate tables.
+Open [`county-results.html`](./county-results.html) for the supplied 47-county sample summary, searchable status filters, and expandable candidate breakdowns.
 
-**Important:** Those figures and candidate names are fictional demonstration data, not official results, a prediction, or an IEBC publication. Kenya’s 2027 election has not taken place. Do not present or redistribute the sample figures as real election results.
+**Important:** Every name, party, vote count, percentage, turnout figure, status, and verification note on that page is fictional demonstration data. It is not official IEBC information, an election result, or a prediction. Do not present or redistribute it as real results.
 
 ## Local development
 
+Requires Node.js 22.12.0 or later.
+
 ```bash
 npm install
-npx wrangler pages dev .
+npm run dev
 ```
 
 ## Cloudflare setup
 
-1. Create a D1 database:
+1. Sign in to Cloudflare:
 
 ```bash
-npx wrangler d1 create kenya-elections-db
+npx wrangler login
 ```
 
-2. Copy the database ID into `wrangler.toml`.
-3. Create the schema:
+2. If you want persistent API storage, create a D1 database:
 
 ```bash
-npx wrangler d1 execute kenya-elections-db --file=./schema.sql
+npm run db:create
+```
+
+Add the ID printed by Wrangler to `wrangler.toml`:
+
+```toml
+[[d1_databases]]
+binding = "DB"
+database_name = "kenya-elections-db"
+database_id = "YOUR_CREATED_DATABASE_ID"
+```
+
+3. Apply the schema to the remote database:
+
+```bash
+npm run db:migrate
 ```
 
 4. Add runtime secrets if you want to replace the demo credentials:
@@ -43,14 +59,16 @@ npx wrangler secret put ADMIN_PASSWORD
 npm run deploy
 ```
 
+The Worker name is `kenyan-elections`, with `workers.dev` enabled. If your Cloudflare account's `workers.dev` subdomain is `sarahmutinda43`, the deployment URL will be `https://kenyan-elections.sarahmutinda43.workers.dev`. Wrangler must be logged into that account, and the account must have its `workers.dev` subdomain enabled.
+
 ## API endpoints
 
 - `GET /api/health` — basic health check
-- `POST /api/auth` — validate the official login
+- `POST /api/auth` — simulate the demo login; not production authentication
 - `GET /api/results` — read results from D1, or demo data fallback
-- `POST /api/submissions` — save a submitted result record
-- `GET /api/state` — read saved app state
-- `POST /api/state` — persist app state
+- `POST /api/submissions` — receive a record; saves to D1 only when configured
+- `GET /api/state` — read saved app state from D1, or the in-memory demo fallback
+- `POST /api/state` — update app state; durable only when D1 is configured
 
 ## Frontend usage
 
